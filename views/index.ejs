@@ -10,7 +10,7 @@
                 <% c.books.forEach(b => {%>
 
                     <div class="col-12 col-md-6 col-lg-4 mb-4">
-                        <a href="#" class="text-dark text-decoration-none">
+                        <a href="/book/<%= b._id %>" class="text-dark text-decoration-none">
                             <div class="card h-100">
                                 <img src="<%= b.image %>" class="card-img-top" height="300" alt="Imagen del libro">
                                 <div class="card-body">

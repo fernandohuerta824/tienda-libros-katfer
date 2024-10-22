@@ -44,7 +44,7 @@ const UserSchema = new Schema({
         required: true
     },
     favoriteCategories: {
-        type: [Types.ObjectId],
+        type: [Object],
         default: []
     }
 
@@ -71,6 +71,7 @@ UserSchema.methods.addToCart = function (product) {
 
     return this.save();
 }
+
 
 
 

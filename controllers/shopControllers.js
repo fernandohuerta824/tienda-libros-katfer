@@ -1,13 +1,36 @@
 import Category from "../models/Category.js";
 import Book from "../models/Book.js";
+import User from "../models/User.js";
+
 
 export async function index(req, res) {
     let fiveCategories = []
     if(!req.session.isLoggedIn) {
         fiveCategories = await Category.find()
             .sort({ numberClicks: -1 })
-            .limit(2);
+            .limit(6);
+    } else {
+        const userCategories = req.session.user.favoriteCategories
+            .sort((a, b) => b.numberClicks - a.numberClicks)
+            .slice(0, 5);
+
+        if(userCategories.length < 1)
+            fiveCategories = await Category.find()
+            .sort({ numberClicks: -1 })
+            .limit(6);
+        else {
+            const userCategoriesIds = fiveCategories.map(fc => fc._id)
+            const userCategories = await Category.find({ _id: { $in: userCategoriesIds } });
+            const additionalCategories = await Category.find({
+                _id: { $nin: userCategoriesIds }
+                })
+                .sort({ numberClicks: -1 })
+                .limit(5 - userCategories.length);
+            fiveCategories = [...userCategoriesIds, ...additionalCategories]
+
+        }
     }
+
     const booksPerCategories = await Promise.all(
         fiveCategories.map(async (category) => {
             // Encuentra los seis libros más clickeados para la categoría actual
@@ -21,9 +44,6 @@ export async function index(req, res) {
             };
         })
     );
-
-
-
 
     res.render('index', {
         pageTitle: 'Tienda Katfer',
@@ -48,5 +68,26 @@ export async function addToCart(req, res) {
         res.redirect('/');
     } catch (error) {
 
+    }
+}
+
+export async function viewBook(req, res) {
+    try {
+        const { id } = req.params;
+        const book = await Book.findById(id);
+        const categoryExist = req.session.user.favoriteCategories.find(fc => book.categories.find(c => c === fc.name))
+
+        if(categoryExist) {
+            req.session.user.favoriteCategories = [...req.session.user.favoriteCategories, {name: book}]
+        }
+        if (!book) {
+            return res.redirect('/');
+        }
+        res.render('book', {
+            pageTitle: book.title,
+            book,
+        });
+    } catch (error) {
+        console.log(error)
     }
 }

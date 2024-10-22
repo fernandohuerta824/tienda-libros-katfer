@@ -6,7 +6,7 @@ import MongoStore   from "connect-mongo";
 import User from "./models/User.js";
 import session from "express-session";
 import shopRoutes from "./routes/shopRoutes.js";
-import Book from "./models/Book.js";
+import bcrypt from "bcryptjs";
 
 const uri = "mongodb+srv://nodejsmax:cr7eselmejorjugador@cluster0.njj8za8.mongodb.net/Katfer?retryWrites=true&w=majority&appName=Cluster0";
 

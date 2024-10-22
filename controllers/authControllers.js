@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import { validationResult } from "express-validator";
+import bcrypt from "bcryptjs";
 
 export function getLogin(req, res) {
     res.render("auth/index", {
@@ -16,7 +17,6 @@ export async function postLogin(req, res) {
 
         const { identifier } = req.body;
         const errors = validationResult(req);
-        console.log('errors:', errors)
         if(!errors.isEmpty()) {
             return res.render('auth/index', {
                 pageTitle: "Login",
@@ -40,4 +40,26 @@ export async function getSignup(req, res) {
         pageTitle: "Signup",
         error: null,
     })
+}
+
+export async function registerUser(req, res) {
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+        return res.status(400).json({errors: errors.array()});
+    }
+    const { firstname, lastname, username,  password, email, address } = req.body;
+
+    try{
+        const hashedPassword = await bcrypt.hash(password,12 );
+
+        const newUser = new User({
+            firstname, lastname, username, email, password: hashedPassword, address
+        });
+        req.session.user = newUser;
+        req.session.isLoggedIn = true;
+        await newUser.save();
+        res.redirect('/');
+    } catch(err){
+        res.status(500).send('Server Error');
+    }
 }
