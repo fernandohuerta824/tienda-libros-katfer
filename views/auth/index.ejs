@@ -1,0 +1,39 @@
+<%- include ('../includes/head.ejs') %>
+<body>
+<div class="vh-100 bg-body-tertiary">
+    <%- include ('../includes/nav.ejs') %>
+
+    <div class="d-flex align-items-center py-4 bg-body-tertiary w-100 justify-content-center h-75">
+        <main class="form-signin w-100 m-auto">
+        <%- include ('../includes/error.ejs') %>
+            <form action="/auth" method="POST">
+                <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+                <div class="form-floating">
+                    <input type="email" name="identifier" class="form-control" id="floatingInput" placeholder="name@example.com" value="<%= identifier %>">
+                    <label for="floatingInput">Email address or username</label>
+                </div>
+                <div class="form-floating">
+                    <input type="password" name="password" class="form-control" id="floatingPassword" placeholder="Password">
+                    <label for="floatingPassword">Password</label>
+                </div>
+
+
+                <div class="d-flex gap-2 justify-content-center py-2">
+                    <a class="btn btn-primary d-inline-flex align-items-center" href="/auth/signup">
+                        Sign up
+                    </a>
+                    <a class="btn btn-outline-secondary d-inline-flex align-items-center" href="/auth/forgot">
+                        Reset password
+                    </a>
+                </div>
+
+                <button class="btn btn-primary w-100 py-2" type="submit">Sign in</button>
+
+
+            </form>
+        </main>
+    </div>
+</div>
+</body>
+</html>

@@ -2,5 +2,37 @@
 <body>
 <%- include ('includes/nav.ejs') %>
 
+<main class="mt-5">
+    <% categories.forEach(c => {%>
+        <div class="container mt-5">
+            <h2><%= c.category %></h2>
+            <div class="row">
+                <% c.books.forEach(b => {%>
+
+                    <div class="col-12 col-md-6 col-lg-4 mb-4">
+                        <a href="#" class="text-dark text-decoration-none">
+                            <div class="card h-100">
+                                <img src="<%= b.image %>" class="card-img-top" height="300" alt="Imagen del libro">
+                                <div class="card-body">
+                                    <h5 class="card-title"><%= b.title %></h5>
+                                    <p class="card-text"><strong>Autor(es): </strong><%= b.authors.join(', ') %></p>
+                                    <p class="card-text"><%= b.description %></p>
+                                    <p class="card-text"><strong>Price:</strong> $<%= b.price %></p>
+                                    <form action="/add-to-cart" method="post">
+                                        <input type="hidden" name="id" value="<%= b._id %>"/>
+                                        <button type="submit" class="btn btn-primary">Add to cart</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+    <% }) %>
+</main>
+
+
+</div>
 </body>
 </html>
